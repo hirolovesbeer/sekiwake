@@ -65,6 +65,7 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
   - netifaces(pip install netifaces)
   - libpcap(brew install libpcap)
   - libdnet
+  
     ```
     $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
     $ brew link autoconf automake
