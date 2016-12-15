@@ -10,10 +10,15 @@ context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind("tcp://127.0.0.1:4999")
 
-port='514'
-host='192.168.0.1'
+# capture src addr(host)
+host = '192.168.0.1'
 
-filter_rule = "udp and host {0} and port {1}".format(host, port)
+syslog_port   = '514'
+netflow_port  = '2055'
+sflow_port    = '6343'
+snmptrap_port = '162'
+
+filter_rule = "udp and host {0} and (port {1} or port {2} or port {3} or port {4})".format(host, syslog_port, netflow_port, sflow_port, snmptrap_port)
 #print(filter_rule)
 
 packetCount = 0
@@ -24,7 +29,18 @@ def customAction(packet):
 
     print(packet.load)
 
-    topic = b'syslog'
+    topic = b''
+    if str(packet[0][1].dport) == syslog_port:
+        topic = b'syslog'
+    elif str(packet[0][1].dport) == netflow_port:
+        topic = b'xflow'
+    elif str(packet[0][1].dport) == sflow_port:
+        topic = b'xflow'
+    elif str(packet[0][1].dport) == snmptrap_port:
+        topic = b'snmptrap'
+    else:
+        print('other something')
+
     message = asbytes(packet.load)
  
     # compose the message
