@@ -32,6 +32,15 @@ def customAction(packet):
     topic = b''
     if str(packet[0][1].dport) == syslog_port:
         topic = b'syslog'
+        message = asbytes(packet.load)
+ 
+        # compose the message
+        msg = "{0} ${1}".format(topic, message)
+ 
+        print("Sending Message: {0}".format(msg))
+ 
+        # send the message
+        socket.send_multipart([topic, message])
     elif str(packet[0][1].dport) == netflow_port:
         topic = b'xflow'
     elif str(packet[0][1].dport) == sflow_port:
@@ -40,16 +49,6 @@ def customAction(packet):
         topic = b'snmptrap'
     else:
         print('other something')
-
-    message = asbytes(packet.load)
- 
-    # compose the message
-    msg = "{0} ${1}".format(topic, message)
- 
-    print("Sending Message: {0}".format(msg))
- 
-    # send the message
-    socket.send_multipart([topic, message])
 
     return "Packet #%s: %s ==> %s" % (packetCount, packet[0][1].src, packet[0][1].dst)    
 
