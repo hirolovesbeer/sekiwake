@@ -13,9 +13,15 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
 - capture.py
   - packet capture program using scapy(libpcap)
   - 0MQ publisher
-- forwarder.py
+- syslog-forwarder.py
   - 0MQ subscriber
   - forward syslog to other server(s)
+- xflow-forwarder.py
+  - 0MQ Subscriber
+  - forward xflow to other server(s)
+- snmptrap-forwarder.py
+  - 0MQ Subscriber
+  - forward snmptrap to other server(s)
 - send-syslog.py
   - test syslog sending program
 
