@@ -21,23 +21,27 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
 
 # System image
 ```
-  +-------+
-  |  dst  |
-  | server|
-  +-------+
-      ^
+  +-------+                      +-------------+
+  |  dst  |                      |   notify    |
+  | server|                      |             |
+  +-------+                      +-------------+
+      ^                                 ^
+      |                                 |
++-----------+                    +-------------+                   +-------------+
+| +-------+ |                    | +---------+ |                   | +---------+ |
+| | s/x/t-| |                    | | anomaly | |                   | |  other  | |
+| |forward| |                    | |detection| |                   | |functions| |
+| +-------+ |                    | +---------+ |                   | +---------+ |
+|     |     | <- syslog/xflow/   |      |      | <- anomaly-       |      |      |
+| +-------+ |    trap-           | +---------+ |    detection.py   | +---------+ |
+| |  sub  | |    forwarder.py    | |   sub   | |                   | |   sub   | |
+| |  0MQ  | |                    | |   0MQ   | |                   | |   0MQ   | |
+| +-------+ |                    | +---------+ |                   | +---------+ |
++-----------+                    +-------------+                   +-------------+
+      ^                                 ^                                 ^
+      |                                 |                                 |
+      +---------------------------------+---------------------------------+
       |
-+-----------+
-| +-------+ |
-| |forward| |
-| +-------+ |
-|     |     | <- forwarder.py
-| +-------+ |
-| |  sub  | |
-| |  0MQ  | |
-| +-------+ |
-+-----------+
-      ^
       |       <- 0MQ(pub/sub model)
       |
 +-----------+
@@ -65,7 +69,7 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
   - netifaces(pip install netifaces)
   - libpcap(brew install libpcap)
   - libdnet
-  
+
     ```
     $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
     $ brew link autoconf automake
