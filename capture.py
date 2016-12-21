@@ -40,6 +40,9 @@ def customAction(packet):
         print("Sending Message: {0}".format(msg))
  
         # send the message
+        # test binary send
+        #import zlib
+        #message = zlib.compress(message)
         socket.send_multipart([topic, message])
     elif str(packet[0][1].dport) == netflow_port:
         topic = b'xflow'
