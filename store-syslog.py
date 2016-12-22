@@ -1,13 +1,12 @@
-import netsyslog
-
 import zmq
+
+test_path = '/var/tmp/test.log'
+
+def store_log(path, msg):
+    with open(path, mode='a', encoding='utf-8') as fh:
+        fh.write(msg.decode('utf-8') + '\n')
  
 if __name__ == "__main__":
-    dst = '192.168.0.2'
-
-    logger = netsyslog.Logger()
-    logger.add_host(dst)
-
     context = zmq.Context()
     socket = context.socket(zmq.SUB)
     socket.setsockopt_string(zmq.SUBSCRIBE, '')
@@ -18,5 +17,5 @@ if __name__ == "__main__":
         print("{0}: {1}".format(topic, msg))
 
         if topic == b'syslog':
-            print("dst = %s" % dst)
-            logger.send_packet(msg)
+            #print("msg = %s" % msg)
+            store_log(test_path, msg)

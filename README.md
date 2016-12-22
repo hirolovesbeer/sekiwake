@@ -24,6 +24,8 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
   - forward snmptrap to other server(s)
 - send-syslog.py
   - test syslog sending program
+- store-syslog.py
+  - store syslog to disk
 
 # System image
 ```
