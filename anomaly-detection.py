@@ -19,14 +19,15 @@ def store_total_count():
 
     now = datetime.datetime.now()
 
-    time_queue.append(now.strftime("%Y-%m-%d %H:%M:%S"))
+    append_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    time_queue.append(append_time)
     value_queue.append(total_count)
 
-    calc_sigma()
+    calc_sigma(append_time)
 
     total_count = 0
 
-def calc_sigma(sigma=3):
+def calc_sigma(time, sigma=3):
     print('hoge')
     data = pd.Series(value_queue, index=time_queue)
     print(data)
@@ -46,8 +47,12 @@ def calc_sigma(sigma=3):
     upper_limit = ma.add(std_plus)
     print(upper_limit)
 
-def detect_anomaly():
-    print("Find anomaly!!")
+    last_ul = std_plus.get(time)
+    detect_anomaly(last_ul)
+
+def detect_anomaly(upper_limit):
+    if upper_limit > total_count:
+        print("Find anomaly!!")
  
 if __name__ == "__main__":
     context = zmq.Context()
