@@ -26,6 +26,11 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
   - test syslog sending program
 - store-syslog.py
   - store syslog to disk
+- anomaly-detection.py
+  - syslog anomaly detection module using Bollinger Band algorithm
+  - count total syslog message number in every minute(60 sec)
+  - if count over 3 sigma(simple moving average + 3 x standard deviation), detect anomaly
+
 
 # System image
 ```
@@ -85,6 +90,8 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
     ```
 - py3-netsyslog(pip install py3-netsyslog)
 - 0MQ(ZeroMQ)
+- pandas, numpy
+  - using anomaly detection module
 
 
 # Performance measurement
