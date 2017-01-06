@@ -5,13 +5,17 @@ from collections import deque
 import pandas as pd
 import datetime
 
+import warnings;warnings.filterwarnings('ignore')
+
+timer_sec   = 5
 total_count = 0
 window_size = 5
+min_periods = 2
 time_queue  = deque([], maxlen=window_size)
 value_queue = deque([], maxlen=window_size)
 
 def store_total_count():
-    timer=threading.Timer(5, store_total_count)
+    timer=threading.Timer(timer_sec, store_total_count)
     timer.start()
 
     global total_count
@@ -32,15 +36,10 @@ def calc_sigma(time, sigma=3):
     data = pd.Series(value_queue, index=time_queue)
     print(data)
 
-    # moving average
-    # ma = data.rolling(center=False, window=window_size).mean()
-
-    window_size = 1
-    ma = data.rolling(center=False, window=window_size).mean()
+    ma = data.rolling(center=False, window=window_size, min_periods=min_periods).mean()
     print(ma)
 
-    window_size = 2
-    std = data.rolling(center=False, window=window_size).std()
+    std = data.rolling(center=False, window=window_size, min_periods=min_periods).std()
     print(std)
 
     std_plus = std.apply(lambda x: x * sigma)
@@ -51,7 +50,7 @@ def calc_sigma(time, sigma=3):
     detect_anomaly(last_ul)
 
 def detect_anomaly(upper_limit):
-    if upper_limit > total_count:
+    if total_count > upper_limit:
         print("Find anomaly!!")
  
 if __name__ == "__main__":
