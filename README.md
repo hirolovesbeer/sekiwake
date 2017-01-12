@@ -62,7 +62,7 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
                                   | |  pub  | |
                                   | |  0MQ  | |
                                   | +-------+ |
-                                  |     |     | <- cap-syslog.py
+                                  |     |     | <- capture.py
                                   | +-------+ |
                                   | | scapy | |
                                   | +-------+ |
@@ -85,13 +85,23 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
 
     ```
     $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
+    $ brew install autoconf automake
     $ brew link autoconf automake
     $ brew install libdnet
     ```
 - py3-netsyslog(pip install py3-netsyslog)
 - 0MQ(ZeroMQ)
+  - 0MQ, pyzmq
+    ```
+    $ brew install 0mq
+    $ conda install pyzmq
+    ```
 - pandas, numpy
   - using anomaly detection module
+    ```
+    $ conda install numpy
+    $ conda install pandas
+    ```
 
 
 # Performance measurement
