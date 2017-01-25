@@ -5,6 +5,7 @@
 import argparse
 
 from scapy.all import sniff
+import msgpack
 
 import zmq
 from zmq.utils.strtypes import asbytes
@@ -14,6 +15,7 @@ SOCKET = CONTEXT.socket(zmq.PUB)
 SOCKET.bind("tcp://127.0.0.1:4999")
 
 DEBUG = False
+MSGPACK = False
 
 # capture src addr(host)
 HOST = '192.168.0.11'
@@ -56,7 +58,11 @@ def custom_action(packet):
         # test binary send
         # import zlib
         # message = zlib.compress(message)
-        SOCKET.send_multipart([topic, message])
+        if MSGPACK:
+            msg = msgpack.packb([topic, message])
+            SOCKET.send(msg)
+        else:
+            SOCKET.send_multipart([topic, message])
     elif str(packet[0][1].dport) == NETFLOW_PORT:
         topic = b'xflow'
     elif str(packet[0][1].dport) == SFLOW_PORT:
@@ -78,6 +84,8 @@ if __name__ == "__main__":
                         type=str)
     parser.add_argument('--debug',
                         default=False, action='store_true')
+    parser.add_argument('--msgpack',
+                        default=False, action='store_true')
     args = parser.parse_args() 
 
     if args.iface:
@@ -87,6 +95,10 @@ if __name__ == "__main__":
     if args.debug:
         print("debug mode")
         DEBUG = True
+
+    if args.msgpack:
+        print("use msgpack")
+        MSGPACK = True
 
     try:
         sniff(iface=INTERFACE, prn=custom_action, filter=FILTER_RULE)
