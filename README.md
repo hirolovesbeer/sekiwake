@@ -105,6 +105,8 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
     $ conda install pyzmq
     ```
   - Ubuntu : $ sudo apt-get install libzmq5-dev
+- msgpack
+  - $ conda install msgpack-python
 - pandas, numpy
   - using anomaly detection module
     ```
