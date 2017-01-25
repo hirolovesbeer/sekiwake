@@ -2,6 +2,8 @@
 
 #! /usr/bin/env python
 
+import argparse
+
 from scapy.all import sniff
 
 import zmq
@@ -11,9 +13,11 @@ CONTEXT = zmq.Context()
 SOCKET = CONTEXT.socket(zmq.PUB)
 SOCKET.bind("tcp://127.0.0.1:4999")
 
+DEBUG = False
+
 # capture src addr(host)
-HOST = '192.168.0.1'
-INTERFACE = 'en1'
+HOST = '192.168.0.11'
+INTERFACE = 'enp0s8'
 
 SYSLOG_PORT = '514'
 NETFLOW_PORT = '2055'
@@ -34,7 +38,8 @@ def custom_action(packet):
     global PACKET_COUNT
     PACKET_COUNT += 1
 
-    print(packet.load)
+    if DEBUG:
+        print(packet.load)
 
     topic = b''
     if str(packet[0][1].dport) == SYSLOG_PORT:
@@ -44,7 +49,8 @@ def custom_action(packet):
         # compose the message
         msg = "{0} ${1}".format(topic, message)
 
-        print("Sending Message: {0}".format(msg))
+        if DEBUG:
+            print("Sending Message: {0}".format(msg))
 
         # send the message
         # test binary send
@@ -60,6 +66,29 @@ def custom_action(packet):
     else:
         print('other something')
 
-    return "Packet #%s: %s ==> %s" % (PACKET_COUNT, packet[0][1].src, packet[0][1].dst)
+    if DEBUG:
+        "Packet #%s: %s ==> %s" % (PACKET_COUNT, packet[0][1].src, packet[0][1].dst)
 
-sniff(iface=INTERFACE, prn=custom_action, filter=FILTER_RULE)
+    return
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--iface',
+                        help='select capture interface',
+                        type=str)
+    parser.add_argument('--debug',
+                        default=False, action='store_true')
+    args = parser.parse_args() 
+
+    if args.iface:
+        print("capture interface is ", args.iface)
+        INTERFACE = args.iface
+
+    if args.debug:
+        print("debug mode")
+        DEBUG = True
+
+    try:
+        sniff(iface=INTERFACE, prn=custom_action, filter=FILTER_RULE)
+    except OSError:
+        print("No such device: ", args.iface)
