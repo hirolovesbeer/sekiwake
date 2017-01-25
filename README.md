@@ -1,4 +1,4 @@
-# sekiwake
+# Sekiwake
 This software is prototype of syslog/xflow/snmptrap forwarder.
 
 # Concept
@@ -76,26 +76,35 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
 
 ```
 
+# Environment
+- macOS Sierra
+- Ubuntu 16.10
+
 # Dependency softwares
 - This software made by python 3.5.2 using anaconda packages
 - scapy-python3(pip install scapy-python3)
   - netifaces(pip install netifaces)
-  - libpcap(brew install libpcap)
+  - libpcap
+    - macOS  : $ brew install libpcap
+    - Ubuntu : $ sudo apt install libpcap-devel
   - libdnet
-
+    - macOS
     ```
     $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
     $ brew install autoconf automake
     $ brew link autoconf automake
     $ brew install libdnet
     ```
+    - Ubuntu : $ sudo apt install libdnet-dev
 - py3-netsyslog(pip install py3-netsyslog)
 - 0MQ(ZeroMQ)
-  - 0MQ, pyzmq
+  - macOS
+    - 0MQ, pyzmq
     ```
     $ brew install 0mq
     $ conda install pyzmq
     ```
+  - Ubuntu : $ sudo apt-get install libzmq5-dev
 - pandas, numpy
   - using anomaly detection module
     ```
