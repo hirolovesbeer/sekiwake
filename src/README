@@ -1,0 +1,9 @@
+TEST for cython module
+
+$ conda install cython
+
+$ python setup.py build_ext --inplace
+
+$ sudo /home/abe/anaconda3/bin/python
+>>> import capture
+>>> capture.main()
