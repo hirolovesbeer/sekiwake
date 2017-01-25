@@ -40,8 +40,11 @@ if __name__ == "__main__":
             topic, msg = msgpack.unpackb(message)
         else:
             topic, msg = socket.recv_multipart()
-#        print("{0}: {1}".format(topic, msg))
+
+        if DEBUG:
+            print("{0}: {1}".format(topic, msg))
 
         if topic == b'syslog':
-            #print("msg = %s" % msg)
+            if DEBUG:
+                print("msg = %s" % msg)
             store_log(test_path, msg)
