@@ -38,6 +38,7 @@ if __name__ == '__main__':
         time.sleep(INTERVAL)
         msg = "Hey, it works " + str(i)
         logger.log(syslog.LOG_USER, syslog.LOG_NOTICE, msg, pid=True)
+    
 
     elapsed_time = time.time() - start
-    print("elapsed_time:{0}".format(elapsed_time)) + "[sec]"
+    print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
