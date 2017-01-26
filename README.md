@@ -86,7 +86,7 @@ This software is prototype of syslog/xflow/snmptrap forwarder.
   - netifaces(pip install netifaces)
   - libpcap
     - macOS  : $ brew install libpcap
-    - Ubuntu : $ sudo apt install libpcap-devel
+    - Ubuntu : $ sudo apt install libpcap-dev
   - libdnet
     - macOS
     ```
