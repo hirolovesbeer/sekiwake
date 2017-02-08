@@ -3,28 +3,36 @@
 import sys, socket, time, os
 from multiprocessing import Process
 
-PORT = 514
-NR_LISTENERS = 8
+import yaml
+
+SYSLOG_PORT = 514
+NR_LISTENERS = os.cpu_count()
 
 SO_REUSEPORT = 15
 
-BUFSIZE = 1025
-#DST_HOST = "10.206.116.22"
+BUFSIZE = 1024
 DST_HOST = "192.168.11.13"
 
-def listener_work(num):
+def listener_work(num, dst_hosts, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.setsockopt(socket.SOL_SOCKET, SO_REUSEPORT, 1)   # set SO_REUSEPORT
-    s.bind(("", PORT))
+    s.bind(("", port))
 
     while True:
         data, addr = s.recvfrom(BUFSIZE)
-        s.sendto(data, (DST_HOST, PORT))
+        # s.sendto(data, (DST_HOST, PORT))
+        for dst in dst_hosts:
+            s.sendto(data, (dst, port))
 
 def server():
+    with open("forward.conf") as f:
+        config = yaml.load(f)
+
+    dst_hosts = config['syslog']
+
     processes = []
     for i in range(NR_LISTENERS):
-        p = Process(target=listener_work, args=(i,))
+        p = Process(target=listener_work, args=(i, dst_hosts, SYSLOG_PORT))
         p.start()
         os.system("taskset -p -c %d %d" % ((i % os.cpu_count()), p.pid))
         processes.append(p)
